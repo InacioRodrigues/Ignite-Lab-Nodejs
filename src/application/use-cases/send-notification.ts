@@ -1,6 +1,7 @@
 import { Notification } from "../entities/notification";
 import { Content } from '../entities/content';
-import { NotificationRepository } from "../repositories/notifications.respository";
+import { NotificationsRepository } from "../repositories/notifications.respository";
+import { Injectable } from "@nestjs/common";
 
 interface SendNotificationRequest {
     recipientId: string;
@@ -8,18 +9,13 @@ interface SendNotificationRequest {
     category: string
 }
 
-
-
 interface SendNotificationResponse {
     notification: Notification
 }
 
-
+@Injectable()
 export class SendNotification {
-    constructor(private notificationsRepository: NotificationRepository
-    ) { }
-
-
+    constructor(private notificationsRepository: NotificationsRepository) { }
 
     async execute(request: SendNotificationRequest): Promise<SendNotificationResponse> {
         const { recipientId, content, category } = request;
@@ -30,11 +26,11 @@ export class SendNotification {
             category,
         });
 
-
         await this.notificationsRepository.create(notification);
-         
+
         return {
             notification,
         }
     }
 }  
+
